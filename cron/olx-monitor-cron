@@ -1,0 +1,1 @@
+0 * * * * /usr/bin/php /var/www/olx-monitor/bin/console monitor:run >> /var/log/olx-monitor-cron.log 2>&1

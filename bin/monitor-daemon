@@ -1,0 +1,59 @@
+#!/usr/bin/env php
+<?php
+
+use OlxMonitor\DependencyInjection\Container;
+use OlxMonitor\Service\MonitoringService;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Dotenv\Dotenv;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$dotenv = new Dotenv();
+$dotenv->load(__DIR__ . '/../.env');
+
+$config = [
+    'database_user' => $_ENV['DATABASE_USER'],
+    'database_password' => $_ENV['DATABASE_PASSWORD'],
+    'database_name' => $_ENV['DATABASE_NAME'],
+    'database_host' => $_ENV['DATABASE_HOST'],
+    'telegram_bot_token' => $_ENV['TELEGRAM_BOT_TOKEN'],
+    'telegram_chat_id' => $_ENV['TELEGRAM_CHAT_ID'],
+    'olx_api_url' => $_ENV['OLX_API_URL'],
+    'log_level' => $_ENV['LOG_LEVEL'] ?? 'info',
+    'monitor_interval' => (int) ($_ENV['MONITOR_INTERVAL'] ?? 3600),
+];
+
+$container = new Container($config);
+
+/** @var MonitoringService $monitoringService */
+$monitoringService = $container->get(MonitoringService::class);
+
+/** @var LoggerInterface $logger */
+$logger = $container->get(LoggerInterface::class);
+
+$logger->info('Starting OLX Monitor daemon', [
+    'interval' => $config['monitor_interval'],
+]);
+
+while (true) {
+    try {
+        $startTime = microtime(true);
+
+        $logger->info('Starting monitoring cycle');
+        $monitoringService->monitorAllFilters();
+
+        $executionTime = microtime(true) - $startTime;
+        $logger->info('Monitoring cycle completed', [
+            'execution_time' => round($executionTime, 2) . 's',
+        ]);
+
+        sleep($config['monitor_interval']);
+    } catch (\Exception $e) {
+        $logger->error('Monitoring cycle failed', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ]);
+
+        sleep(300);
+    }
+}

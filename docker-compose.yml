@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  olx-monitor:
+    build: .
+    container_name: olx-monitor
+    restart: unless-stopped
+    volumes:
+      - ./:/app
+    depends_on:
+      mysql:
+        condition: service_healthy
+    env_file:
+      - .env
+    networks:
+      - olx-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: olx-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: olx_monitor
+      MYSQL_USER: olx_user
+      MYSQL_PASSWORD: olx_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./migrations:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    networks:
+      - olx-network
+
+  web:
+    build: .
+    container_name: olx-web
+    restart: unless-stopped
+    volumes:
+      - ./logs:/app/logs
+      - ./:/app
+    ports:
+      - "8080:8000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    env_file:
+      - .env
+    command: ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+    networks:
+      - olx-network
+
+volumes:
+  mysql_data:
+
+networks:
+  olx-network:
+    driver: bridge

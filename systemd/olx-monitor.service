@@ -1,0 +1,21 @@
+[Unit]
+Description=OLX Monitor Service
+After=network.target mysql.service
+Wants=mysql.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/olx-monitor
+ExecStart=/usr/bin/php /var/www/olx-monitor/bin/monitor-daemon
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Environment variables can be set here or use EnvironmentFile
+# EnvironmentFile=/var/www/olx-monitor/.env
+
+[Install]
+WantedBy=multi-user.target

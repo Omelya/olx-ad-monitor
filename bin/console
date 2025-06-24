@@ -1,0 +1,36 @@
+#!/usr/bin/env php
+<?php
+
+use OlxMonitor\Console\CreateFilterCommand;
+use OlxMonitor\Console\ListFiltersCommand;
+use OlxMonitor\Console\MonitorCommand;
+use OlxMonitor\DependencyInjection\Container;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Dotenv\Dotenv;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$dotenv = new Dotenv();
+$dotenv->load(__DIR__ . '/../.env');
+
+$config = [
+    'database_user' => $_ENV['DATABASE_USER'],
+    'database_password' => $_ENV['DATABASE_PASSWORD'],
+    'database_name' => $_ENV['DATABASE_NAME'],
+    'database_host' => $_ENV['DATABASE_HOST'],
+    'telegram_bot_token' => $_ENV['TELEGRAM_BOT_TOKEN'],
+    'telegram_chat_id' => $_ENV['TELEGRAM_CHAT_ID'],
+    'olx_api_url' => $_ENV['OLX_API_URL'],
+    'log_level' => $_ENV['LOG_LEVEL'] ?? 'info',
+    'monitor_interval' => (int) ($_ENV['MONITOR_INTERVAL'] ?? 3600),
+];
+
+$container = new Container($config);
+
+$application = new Application('OLX Monitor', '1.0.0');
+
+$application->add($container->get(MonitorCommand::class));
+$application->add($container->get(CreateFilterCommand::class));
+$application->add($container->get(ListFiltersCommand::class));
+
+$application->run();
