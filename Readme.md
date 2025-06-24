@@ -213,7 +213,3 @@ make fix  # Виправити стиль коду
 ```bash
 ./vendor/bin/phpstan analyse src --level=8
 ```
-
-## Ліцензія
-
-MIT
