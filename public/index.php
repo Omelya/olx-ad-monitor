@@ -16,7 +16,6 @@ $config = [
     'database_name' => $_ENV['DATABASE_NAME'],
     'database_host' => $_ENV['DATABASE_HOST'],
     'telegram_bot_token' => $_ENV['TELEGRAM_BOT_TOKEN'],
-    'telegram_chat_id' => $_ENV['TELEGRAM_CHAT_ID'],
     'olx_api_url' => $_ENV['OLX_API_URL'],
     'log_level' => $_ENV['LOG_LEVEL'] ?? 'info',
 ];

@@ -33,9 +33,11 @@ cp .env.example .env
 ### 2. Налаштування .env файлу
 
 ```bash
-DATABASE_URL=mysql://username:password@localhost/olx_monitor
-TELEGRAM_BOT_TOKEN=your_telegram_bot_token
-TELEGRAM_CHAT_ID=your_chat_id
+DATABASE_USER=olx_user
+DATABASE_PASSWORD=olx_password
+DATABASE_NAME=olx_monitor
+DATABASE_HOST=mysql
+TELEGRAM_BOT_TOKEN=
 OLX_API_URL=https://www.olx.ua/apigateway/graphql
 LOG_LEVEL=info
 MONITOR_INTERVAL=3600
