@@ -1,28 +1,31 @@
-FROM php:8.4-cli
+FROM composer:2.1 as build
+WORKDIR /app
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
+COPY . .
 
-RUN apt-get update && apt-get install -y \
+FROM php:8.4-cli-alpine
+
+RUN apk add --no-cache \
     git \
     curl \
     libpng-dev \
-    libonig-dev \
     libxml2-dev \
+    oniguruma-dev \
     zip \
-    unzip \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    unzip
 
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
-
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN docker-php-ext-install \
+    pdo_mysql \
+    mbstring \
+    gd \
+    exif \
+    pcntl \
+    bcmath
 
 WORKDIR /app
 
-COPY composer.json ./
-COPY composer.lock ./
-
-RUN composer install --no-dev --optimize-autoloader
-
-COPY . .
+COPY --from=build /app .
 
 RUN mkdir -p logs && chmod 777 logs
 

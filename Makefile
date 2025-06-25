@@ -1,7 +1,7 @@
 .PHONY: install setup start stop restart logs test
 
 install:
-	composer install
+	composer install --ignore-platform-reqs
 
 setup:
 	php scripts/setup.php
