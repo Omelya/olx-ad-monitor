@@ -16,7 +16,8 @@ create-filter:
 		--region-id="$(REGION_ID)" \
 		--city-id="$(CITY_ID)" \
 		--apartment-type="$(APPARTMENT_TYPE)" \
-		--area="$(AREA)"
+		--area="$(AREA)" \
+		--distance="$(DISTANCE)"
 
 list-filters:
 	php bin/console filter:list

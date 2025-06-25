@@ -37,7 +37,8 @@ class CreateFilterCommand extends Command
             ->addOption('region-id', null, InputOption::VALUE_OPTIONAL, 'Region ID')
             ->addOption('city-id', null, InputOption::VALUE_OPTIONAL, 'City ID')
             ->addOption('apartment-type', null, InputOption::VALUE_OPTIONAL, 'Apartment Type')
-            ->addOption('area', null, InputOption::VALUE_OPTIONAL, 'Area (e.g., 10 or 10,20)');
+            ->addOption('area', null, InputOption::VALUE_OPTIONAL, 'Area (e.g., 10 or 10,20)')
+            ->addOption('distance', null, InputOption::VALUE_OPTIONAL, 'Distance in km (e.g., 10');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -65,6 +66,10 @@ class CreateFilterCommand extends Command
 
             if ($input->getOption('area')) {
                 $filters['area'] = $input->getOption('area');
+            }
+
+            if ($input->getOption('distance')) {
+                $filters['distance'] = $input->getOption('distance');
             }
 
             $filter = new SearchFilter(

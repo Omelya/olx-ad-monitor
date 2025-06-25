@@ -59,9 +59,12 @@ make create-filter \
   CATEGORY="нерухомість" \
   SUBCATEGORY="квартири" \
   TYPE="довгострокова оренда" \
-  PRICE_FROM="10000" \
-  PRICE_TO="25000" \
-  LOCATION_ID="1"
+  PRICE="10000" OR "10000,15000" \
+  REGION_ID="10" \
+  CITY_ID="247" \
+  APARTMENT_TYPE="житловий фонд 2001-2010" \
+  AREA="50" OR "50,75" \
+  DISTANCE="10" (e.g. km)
 ```
 
 ### Запуск моніторингу
@@ -102,7 +105,7 @@ make docker-logs
 
 ```bash
 # Створити фільтр
-php bin/console filter:create --name="Test" --category="нерухомість" --subcategory="квартири" --type="оренда"
+php bin/console filter:create --name="Test" --category="нерухомість" --subcategory="квартири" --type="довгострокова оренда"
 
 # Переглянути фільтри
 php bin/console filter:list
@@ -122,10 +125,10 @@ php bin/console monitor:run --filter-id="uuid"
 
 ```
 src/
-├── Entity/           # Сутності (Listing, SearchFilter)
+├── Entity/           # Сутності
 ├── Repository/       # Репозиторії для роботи з БД
-├── Service/          # Бізнес-логіка (MonitoringService, NotificationService)
-├── Http/            # HTTP клієнти (OlxApiClient, TelegramBotClient)
+├── Service/          # Бізнес-логіка
+├── Http/            # HTTP клієнти
 ├── Console/         # Консольні команди
 └── DependencyInjection/ # DI контейнер
 
@@ -152,10 +155,12 @@ cron/              # Cron завдання
 - `транспорт` → `легкові автомобілі`
 
 ### Фільтри
-- `price_from`, `price_to` - діапазон цін
-- `location_id` - ID локації
-- `rooms` - кількість кімнат
-- Додаткові фільтри в масиві `additional`
+- `price` - діапазон цін (наприклад, 10000 або 10000,15000)
+- `region-id` - ID регіону
+- `city-id` - ID міста
+- `apartment-type` - тип квартири
+- `area` - площа (наприклад 10 або 10,20)
+- `distance` - відстань у км (наприклад 10)
 
 ## Логування
 
