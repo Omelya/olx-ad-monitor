@@ -43,7 +43,17 @@ LOG_LEVEL=info
 MONITOR_INTERVAL=3600
 ```
 
-### 3. Ініціалізація бази даних
+### 3. Ініціалізація
+
+### Docker
+
+```bash
+make docker-build
+make docker-up
+make docker-logs
+```
+
+### Міграції (Запускати в контейнері)
 
 ```bash
 make setup
@@ -51,7 +61,7 @@ make setup
 
 ## Використання
 
-### Створення фільтра
+### Створення фільтра (Запускати в контейнері)
 
 ```bash
 make create-filter \
@@ -67,7 +77,7 @@ make create-filter \
   DISTANCE="10" (e.g. km)
 ```
 
-### Запуск моніторингу
+### Запуск моніторингу (Запускати в контейнері)
 
 #### Одноразовий запуск
 ```bash
@@ -91,15 +101,7 @@ make service-logs
 make install-cron
 ```
 
-### Docker
-
-```bash
-make docker-build
-make docker-up
-make docker-logs
-```
-
-## API команди
+## API команди (Запускати в контейнері)
 
 ### Консольні команди
 
